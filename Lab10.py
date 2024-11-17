@@ -35,14 +35,17 @@ class Worker:
     def get_name(self):
         return f"{self.name['first']} {self.name['last']}"
 
-    def set_name(self, first_name, last_name):
+    def set_name(self, full_name):
         def sanitize_name(name):
             return name.replace('_', '').replace('.', '').replace('-', '')
 
-        if not first_name or not last_name:
-            raise ValueError("First and last names cannot be empty.")
-        self.name['first'] = sanitize_name(first_name)
-        self.name['last'] = sanitize_name(last_name)
+        if not full_name:
+            raise ValueError("Name cannot be empty.")
+        sanitized_name = sanitize_name(full_name).split()
+        if len(sanitized_name) < 2:
+            raise ValueError("Full name must include at least a first and last name.")
+        self.name['first'] = sanitized_name[0]
+        self.name['last'] = sanitized_name[1]
 
     def set_birthdate(self, d, m, y):
         if m < 1 or m > 12:
@@ -93,7 +96,7 @@ if __name__ == "__main__":
     try:
         worker.set_employee_number(12345)
         worker.set_office_number(200)
-        worker.set_name("Jane", "Doe")
+        worker.set_name("He--ll.o Wo_rld")  # Single full name input
         worker.set_birthdate(12, 5, 1990)
         worker.add_hours(10)
         worker.set_hourly_salary(25)
